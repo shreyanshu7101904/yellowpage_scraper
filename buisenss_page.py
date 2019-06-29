@@ -20,10 +20,18 @@ class Crawl(scrapy.Spider):
 
 
     def parse(self, response):
-        # output_json = {}
-        name = response.xpath(".//div[@class = 'sales-info']/h1").get()
+        output_json = {}
+        
+        output_json["Name"] = response.xpath(".//div[@class = 'sales-info']/h1/text()").get()
+        output_json["Address"] = response.xpath(".//div[@class = 'contact']/h2/text()").get()
+        output_json["Phone"] = response.xpath(".//div[@class = 'contact']/p/text()").get()
+        output_json["Current_status"] = response.xpath(".//div[@class = 'time-info']/div[1]/text()").get()
+        output_json["Working_hours"] = response.xpath(".//div[@class = 'time-info']/div[2]/text()").get()
+        # years-in-business
+        count = response.xpath(".//div[@class = 'years-in-business']/div[@class= 'count']/text()").getall()
+        info = response.xpath(".//div[@class = 'years-in-business']/span/text()").getall()
         #pdb.set_trace()
-        print(name)
+        print(count, info)
 
 """for list_data in response.xpath(".//div[@class='result']"):
 ids = list_data.xpath(".//@id").get()
