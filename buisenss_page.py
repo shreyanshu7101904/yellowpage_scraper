@@ -28,10 +28,22 @@ class Crawl(scrapy.Spider):
         output_json["Current_status"] = response.xpath(".//div[@class = 'time-info']/div[1]/text()").get()
         output_json["Working_hours"] = response.xpath(".//div[@class = 'time-info']/div[2]/text()").get()
         # years-in-business
-        count = response.xpath(".//div[@class = 'years-in-business']/div[@class= 'count']/text()").getall()
+        count = response.xpath(".//div[@class = 'years-in-business']/div[@class= 'count']/div[@class= 'number']/text()").get()
         info = response.xpath(".//div[@class = 'years-in-business']/span/text()").getall()
+        output_json["Working_years"] = count
+        output_json["Total_Working_days"] = info
+        insurance = response.xpath(".//article[@id = 'accepted-insurance']/div[@class = 'lists']/ul[*]/li[*]/text()").getall()
+        """        for i in response.xpath(".//article[@id = 'accepted-insurance']/div[@class = 'lists']"):
+            print(i.xpath("./ul/li[*]/text()").getall())"""
+        for i in response.xpath(".//*/dl"):
+            print(i.xpath(".//dt/text()").get())
+            for j in i.xpath(".//dt"):
+                print(j.xpath("./dd/text()").get())
+
+        # info.append(count)
+        # output_json["Span"] = " ".join(info)
         #pdb.set_trace()
-        print(count, info)
+        print(output_json, "\n", insurance)
 
 """for list_data in response.xpath(".//div[@class='result']"):
 ids = list_data.xpath(".//@id").get()
