@@ -35,10 +35,12 @@ class Crawl(scrapy.Spider):
         insurance = response.xpath(".//article[@id = 'accepted-insurance']/div[@class = 'lists']/ul[*]/li[*]/text()").getall()
         """        for i in response.xpath(".//article[@id = 'accepted-insurance']/div[@class = 'lists']"):
             print(i.xpath("./ul/li[*]/text()").getall())"""
+        data = {}
         for i in response.xpath(".//*/dl"):
-            print(i.xpath(".//dt/text()").get())
-            for j in i.xpath(".//dt"):
-                print(j.xpath("./dd/text()").get())
+            x= i.xpath(".//dd/text()").get()            
+            for j in i.xpath(".//dd"):
+                data[x] = j.xpath(".//dt/text()").get()
+                print(data)
 
         # info.append(count)
         # output_json["Span"] = " ".join(info)
