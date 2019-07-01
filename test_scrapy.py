@@ -37,8 +37,8 @@ class Crawl(scrapy.Spider):
             for links in sub_list.xpath(".//div[contains(@class, 'links')]/a"):
                 output_json[links.xpath(".//text()").get()] = links.xpath(".//@href").get()              
             # print(output_json)
-            count += 1
-            print("count", count)
+            #count += 1
+            #print("count", count)
             print(output_json)
         print("///////////////////////////")
             #output_json = {}
