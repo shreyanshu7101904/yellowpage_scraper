@@ -1,7 +1,6 @@
 import scrapy
 from scrapy.selector import Selector
-import pudb
-import pdb
+
 import time 
 
 class Crawl(scrapy.Spider):
