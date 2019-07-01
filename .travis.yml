@@ -8,4 +8,4 @@ install:
   - pip install -r requirement.txt
 # command to run tests
 script: 
-  - python3 bs4Test.py
+  - python3 test_scrapy.py
