@@ -36,16 +36,30 @@ class Crawl(scrapy.Spider):
         """        for i in response.xpath(".//article[@id = 'accepted-insurance']/div[@class = 'lists']"):
             print(i.xpath("./ul/li[*]/text()").getall())"""
         data = {}
-        for i in response.xpath(".//*/dl"):
-            x= i.xpath(".//dd/text()").get()            
-            for j in i.xpath(".//dd"):
-                data[x] = j.xpath(".//dt/text()").get()
-                print(data)
-
+        # for i in response.xpath(".//dl"):
+        #     for j, k in zip(i.xpath(".//dt/text()"), i.xpath(".//dd/text()")):
+        #         print(j, "\n\n", k)
+        for i in response.xpath(".//dl"):
+            for j, k in zip(i.xpath(".//dt/text()"), i.xpath(".//dd")):
+                print(j.get(), k.xpath(".//*"))
+                # if k.xpath(".//ul").get():
+                #     data[j.get()] = k.xpath(".//ul/li").getall()
+                #     print(j.get(), k.xpath(".//ul/li/text()").getall(), "*"*10)
+                #     # print(j.get(), i.xpath(".//dd/ul/li/*/text()").getall())
+                # else: 
+                #     data[j.get()] = k.xpath(".//text()").extract()                
+                #     print(j.get(), k))
+                # output_json[j.get()] = k.getall()
+                # print(j.get(), k.get())
+            # x= i.xpath(".//text()").get()
+            # # print(i, "\n\n")
+            # print(i.xpath(".//dd"))            
+            # data[x] =  i.xpath(".//dd/text()").get()
+        print(data)
         # info.append(count)
         # output_json["Span"] = " ".join(info)
         #pdb.set_trace()
-        print(output_json, "\n", insurance)
+        print(output_json)
 
 """for list_data in response.xpath(".//div[@class='result']"):
 ids = list_data.xpath(".//@id").get()
