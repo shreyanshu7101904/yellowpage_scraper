@@ -1,0 +1,11 @@
+language: python
+python:
+  - "3.6"
+
+# command to install dependencies
+install:
+  - pip install --upgrade pip
+  - pip install -r requirement.txt
+# command to run tests
+script: 
+  - python3 bs4Test.py
