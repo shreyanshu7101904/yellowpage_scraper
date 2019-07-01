@@ -6,5 +6,5 @@ python:
 install:
   - pip install -r requirements.txt
 # command to run tests
-script:
-  - python bs4Test.py 
+script: 
+  - python3 bs4Test.py
