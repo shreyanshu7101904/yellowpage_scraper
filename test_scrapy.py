@@ -31,9 +31,9 @@ class Crawl(scrapy.Spider):
             yp_url = sub_list.xpath('.//h2/a/@href').get()
             output_json["Url"] = yp_url            
             print(sub_list.xpath(".//div[contains(@class, 'info-secondary')]/div[contains(@class, 'phone')]/text()").get())            
-            output_json["Phone"] = sub_list.xpath(".//div[contains(@class, 'info-secondary')]/div[contains(@class, 'phone')]/text()").get()
-            output_json["Address"] = sub_list.xpath(".//div[contains(@class, 'info-secondary')]/div[contains(@class, 'street-address')]/text()").get()
-            output_json["Locality"] = sub_list.xpath(".//div[contains(@class, 'info-secondary')]/div[contains(@class,'locality')]/text()").get()
+            output_json["Phone"] = sub_list.xpath(".//div[contains(@class, 'phone')]/text()").get()
+            output_json["Address"] = sub_list.xpath(".//div[contains(@class, 'street-address')]/text()").get()
+            output_json["Locality"] = sub_list.xpath(".//div[contains(@class,'locality')]/text()").get()
             for links in sub_list.xpath(".//div[contains(@class, 'links')]/a"):
                 output_json[links.xpath(".//text()").get()] = links.xpath(".//@href").get()              
             # print(output_json)
