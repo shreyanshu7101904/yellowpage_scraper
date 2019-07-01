@@ -6,7 +6,7 @@ res = requests.get("https://www.yellowpages.com/los-angeles-ca/spa")
 soup = BeautifulSoup(res.text, "html.parser")
 print(soup.title)
 count = 1
-pdb.set_trace()
+# pdb.set_trace()
 for result in soup.find_all('div',class_ = 'result'):
     # for x in result.find_all('a'):
     #     print(x.get('href', x.get_text()))
