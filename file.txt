@@ -1,0 +1,20 @@
+Biography <Selector xpath='.//dd' data='<dd>Dr. Philline Parreno-Banaag is a Gen'>
+Gender <Selector xpath='.//dd' data='<dd class="capitalize">female</dd>'>
+Languages Spoken <Selector xpath='.//dd' data='<dd>Spanish, Tagalog</dd>'>
+Accepts New Patients <Selector xpath='.//dd' data='<dd>Yes</dd>'>
+Treatments <Selector xpath='.//dd' data='<dd><ul><li>Dental Crowns</li><li>Dental'>
+Patients Treated <Selector xpath='.//dd' data='<dd><ul><li>Teens and Young Adults</li><'>
+Education <Selector xpath='.//dd' data='<dd><dl><dt>University of the Pacific  A'>
+University of the Pacific  Arthur E. Dugoni School of Dentistry in San Francisco <Selector xpath='.//dd' data='<dd>Doctorate, D.D.S., 2012</dd>'>
+University of the Pacific  Arthur E. Dugoni School of Dentistry in San Francisco <Selector xpath='.//dd' data='<dd>Doctorate, D.D.S., 2012</dd>'>
+Practice Affiliations <Selector xpath='.//dd' data='<dd><address><p><strong>Perfectly Bright'>
+Main Location <Selector xpath='.//dd' data='<dd><address><p>2750 W Broadway # B</p><'>
+Hours <Selector xpath='.//dd' data='<dd class="open-hours"><div class="open-'>
+Neighborhoods <Selector xpath='.//dd' data='<dd class="neighborhoods"><span><a href='>
+Financing <Selector xpath='.//dd' data='<dd>Yes</dd>'>
+Payment Method <Selector xpath='.//dd' data='<dd class="capitalize">amex, cash, disco'>
+Other Link <Selector xpath='.//dd' data='<dd><p><a class="other-links" href="http'>
+Category <Selector xpath='.//dd' data='<dd class="categories"><span><a href="/l'>
+Other Information <Selector xpath='.//dd' data='<dd class="other-information"><p><strong'>
+{}
+{'Name': 'Philline Parreno-Banaag, D.D.S.', 'Address': '2750 W Broadway # B, Los Angeles, CA 90041', 'Phone': '(323) 739-0215', 'Current_status': 'CLOSED NOW', 'Working_hours': 'Today: 9:00 am - 5:00 pm', 'Working_years': '7', 'Total_Working_days': ['YEARS ', ' IN PRACTICE']}
