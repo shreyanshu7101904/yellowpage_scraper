@@ -24,7 +24,7 @@ class Crawl(scrapy.Spider):
         #pdb.set_trace()
         count = 1
         # data = response.xpath(".//script[@type = 'application/ld+json'][2]").get()
-        for sub_list in response.xpath(".//div[@class='result']/div/div[@class= 'v-card']"):
+        for sub_list in response.xpath(".//div[@class = 'result']/div/div[@class= 'v-card']"):
             # time.sleep(0.5)
             output_json["Name"] = sub_list.xpath(".//h2/a/span/text()").get()
             output_json["Image_Url"] = sub_list.xpath(".//div[@class='media-thumbnail']//img/@src").get()
