@@ -21,12 +21,13 @@ class Crawl(scrapy.Spider):
         for cards in response.xpath(".//div[contains(@class,'search-result')]/div[@class='result']"):
             sub_list =cards.xpath(".//div/div[@class= 'v-card']")
             output_json["Name"] = sub_list.xpath(".//h2/a/span/text()").get()
-            ids = sub_list.xpath(".//div[@class='media-thumbnail']/a[contains(@class, 'media-thumbnail')]/@src").get()
+            ids = cards.xpath(".//@id").get()
             # ids = ids.split('-')
             # ids = ids.pop()
             # output_json["id"] = ids
             output_json["Image_Url"] = sub_list.xpath(".//div[@class='media-thumbnail']/a[contains(@class, 'media-thumbnail')]/img/@src").get()
-            output_json["ids"] = ids
+            if ids:
+                output_json["id"] = ids.split("-")[1]
             yp_url = sub_list.xpath('.//h2/a/@href').get()
             output_json["Url"] = yp_url                    
             output_json["Phone"] = sub_list.xpath(".//div[contains(@class, 'phone')]/text()").get()
