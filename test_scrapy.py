@@ -26,6 +26,7 @@ class Crawl(scrapy.Spider):
             # ids = ids.pop()
             # output_json["id"] = ids
             output_json["Image_Url"] = sub_list.xpath(".//div[@class='media-thumbnail']/a[contains(@class, 'media-thumbnail')]/img/@src").get()
+            output_json["ids"] = ids
             yp_url = sub_list.xpath('.//h2/a/@href').get()
             output_json["Url"] = yp_url                    
             output_json["Phone"] = sub_list.xpath(".//div[contains(@class, 'phone')]/text()").get()
