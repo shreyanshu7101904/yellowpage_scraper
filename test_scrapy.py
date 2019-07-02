@@ -20,6 +20,10 @@ class Crawl(scrapy.Spider):
         output_json = {}
         for sub_list in response.xpath(".//div[contains(@class,'search-result')]/div[@class='result']/div/div[@class= 'v-card']"):
             output_json["Name"] = sub_list.xpath(".//h2/a/span/text()").get()
+            ids = sub_list.xpath(".//div[@class='media-thumbnail']/a[contains(@class, 'media-thumbnail')]/@src").get()
+            ids = ids.split('-')
+            ids = ids.pop()
+            output_json["id"] = ids
             output_json["Image_Url"] = sub_list.xpath(".//div[@class='media-thumbnail']/a[contains(@class, 'media-thumbnail')]/img/@src").get()
             yp_url = sub_list.xpath('.//h2/a/@href').get()
             output_json["Url"] = yp_url                    
