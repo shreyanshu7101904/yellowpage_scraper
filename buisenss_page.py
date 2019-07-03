@@ -44,8 +44,8 @@ class Crawl(scrapy.Spider):
         data = {}
         for i in response.xpath(".//section/dl"):
             for j, k in zip(i.xpath("./dt/text()"), i.xpath("./dd")):
-                data[j.get()] = k
-                print(j.get(), "\n", k, "\n\n")
+                data[j.get()] = k.get()
+                print(j.get(), "\n", k.get(), "\n\n", dir(k))
         putDataInDb("business_data", data)
         
         # for i in response.xpath(".//dl"):
