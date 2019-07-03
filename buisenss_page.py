@@ -1,5 +1,6 @@
 import scrapy
 from scrapy.selector import Selector
+from scrapy.utils.markup import remove_tags
 import time 
 import json 
 from mongodbfunc import putDataInDb
@@ -34,14 +35,27 @@ class Crawl(scrapy.Spider):
         output_json["Current_status"] = response.xpath(".//div[@class = 'time-info']/div[1]/text()").get()
         output_json["Working_hours"] = response.xpath(".//div[@class = 'time-info']/div[2]/text()").get()
         # years-in-business
-        count = response.xpath(".//div[@class = 'years-in-business']/div[@class= 'count']/div[@class= 'number']/text()").get()
-        info = response.xpath(".//div[@class = 'years-in-business']/span/text()").getall()
-        output_json["Working_years"] = count
-        output_json["Total_Working_days"] = info
+        years_in_business_card = response.css('.years-in-business')
+        years_in_business_card_value1 = years_in_business_card.xpath('.//div[@class="count"]//text()')
+        if(years_in_business_card_value1):
+            output_json["Working_years"] = years_in_business_card_value1.extract()[0]
+
+        years_in_business_text = years_in_business_card.xpath('.//span').extract()
+        if(years_in_business_text):
+            years_in_business_card_text1 = " ".join(years_in_business_text)
+            if(years_in_business_card_text1):
+                output_json["Working_years_text"] = remove_tags(years_in_business_card_text1)
+        location_card = response.css('#bpp-static-map')
+        if(location_card):
+            output_json["location_lat"] = location_card.xpath('./@data-lat').extract()[0]
+            output_json[" location_lng"] =  location_card.xpath('./@data-lng').extract()[0]
+       
+        output_json["source_url"] =  response.request.url
+         
         # insurance = response.xpath(".//article[@id = 'accepted-insurance']/div[@class = 'lists']/ul[*]/li[*]/text()").getall()
         # """        for i in response.xpath(".//article[@id = 'accepted-insurance']/div[@class = 'lists']"):
         #     print(i.xpath("./ul/li[*]/text()").getall())"""
-        data = {}
+       
         for i in response.xpath(".//section/dl"):
             for j, k in zip(i.xpath("./dt/text()"), i.xpath("./dd")):
                 output_json[j.get()] = k.get()
@@ -49,47 +63,3 @@ class Crawl(scrapy.Spider):
         putDataInDb("business_data", output_json)
 
         
-        # for i in response.xpath(".//dl"):
-        #     for j, k in zip(i.xpath(".//dt/text()"), i.xpath(".//dd")):
-        #         print(j.get(), k.xpath(".//*"))
-                # if k.xpath(".//ul").get():
-                #     data[j.get()] = k.xpath(".//ul/li").getall()
-                #     print(j.get(), k.xpath(".//ul/li/text()").getall(), "*"*10)
-                #     # print(j.get(), i.xpath(".//dd/ul/li/*/text()").getall())
-                # else: 
-                #     data[j.get()] = k.xpath(".//text()").extract()                
-                #     print(j.get(), k))
-                # output_json[j.get()] = k.getall()
-                # print(j.get(), k.get())
-            # x= i.xpath(".//text()").get()
-            # # print(i, "\n\n")
-            # print(i.xpath(".//dd"))            
-            # data[x] =  i.xpath(".//dd/text()").get()
-        # print(data)
-        # info.append(count)
-        # output_json["Span"] = " ".join(info)
-        #pdb.set_trace()
-        # print(output_json)
-
-"""for list_data in response.xpath(".//div[@class='result']"):
-ids = list_data.xpath(".//@id").get()
-if ids:
-    output_json["Id"] = str(ids).split('-')[1]
-sub_list = list_data.xpath(".//div/div[@class= 'v-card']")
-
-output_json["Name"] = sub_list.xpath(".//h2/a/span/text()").get()
-output_json["Image_Url"] = sub_list.xpath(".//div[@class='media-thumbnail']//img/@src").get()
-yp_url = sub_list.xpath('.//h2/a/@href').get()
-output_json["Url"] = yp_url
-time.sleep(0.5)            
-#print(sub_list.xpath(".//div[contains(@class, 'info-secondary')]/div[contains(@class, 'phone')]/text()").get())            
-output_json["Phone"] = sub_list.xpath(".//div[contails
-ns(@class, 'info-secondary')]/div[contains(@class, 'phone')]/text()").get()
-output_json["Address"] = sub_list.xpath(".//div[contains(@class, 'info-secondary')]/div[contains(@class, 'street-address')]/text()").get()
-output_json["Locality"] = sub_list.xpath(".//div[contains(@class, 'info-secondary')]/div[contains(@class,'locality')]/text()").get()
-for links in sub_list.xpath(".//div[contains(@class, 'links')]/a"):
-    output_json[links.xpath(".//text()").get()] = links.xpath(".//@href").get()              
-print(output_json)
-print("/n/n/n")
-
-#output_json = {}"""
