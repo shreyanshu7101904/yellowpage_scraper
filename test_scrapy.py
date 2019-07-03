@@ -1,5 +1,6 @@
 import scrapy
 import time 
+import pdb
 from mongodbfunc import putDataInDb
 class Crawl(scrapy.Spider):
     """ scrapper yellow pages list"""
@@ -24,14 +25,16 @@ class Crawl(scrapy.Spider):
         links = self.generateLinks()
         for link in links:
             for number in range(1,10):
-                url = link + "?page =" + str(number)             
-                yield scrapy.Request(url = url, callback = self.parse, )
+                url = link + "?page=" + str(number)             
+                yield scrapy.Request(url = url, callback = self.parse,meta= {"request_url":url} )
 
 
     def parse(self, response):
         
         for cards in response.xpath(".//div[contains(@class,'search-result')]/div[@class='result']"):
             output_json = {}
+            output_json["request_url"] = response.meta["request_url"]
+            output_json["response_url"] = str(response.url)
             sub_list =cards.xpath(".//div/div[@class= 'v-card']")
             output_json["Name"] = sub_list.xpath(".//h2/a/span/text()").get()
             ids = cards.xpath(".//@id").get()
@@ -43,6 +46,7 @@ class Crawl(scrapy.Spider):
             output_json["Phone"] = sub_list.xpath(".//div[contains(@class, 'phone')]/text()").get()
             output_json["Address"] = sub_list.xpath(".//p[@class= 'adr']/span[@class= 'street-address']/text()").get()
             output_json["Locality"] = sub_list.xpath(".//p[@class='adr']/span[@class= 'locality']/text()").get()
+            # output_json["Zipcode"] = sub_list.xpath(".//p[@class='adr']/span[last()]/text()").get()
             for links in sub_list.xpath(".//div[contains(@class, 'links')]/a"):
                 output_json[links.xpath(".//text()").get()] = links.xpath(".//@href").get()              
             putDataInDb("yellowpages_data", output_json)
