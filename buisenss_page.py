@@ -3,6 +3,7 @@ from scrapy.selector import Selector
 import pudb
 import pdb
 import time 
+import json
 
 class Crawl(scrapy.Spider):
     """ scrapper yellow pages list"""
@@ -14,12 +15,12 @@ class Crawl(scrapy.Spider):
 
     def start_requests(self):
         USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.93 Safari/537.36"
-        Url = 'https://www.yellowpages.com/los-angeles-ca/mip/philline-parreno-banaag-d-d-s-514023798?lid=514023798'
+        Url = 'https://www.yellowpages.com/modesto-ca/mip/sierra-health-center-8571343'
         yield scrapy.Request(url = Url, callback = self.parse, )
 
 
 
-    def parse(self, response):
+    def parse(self, response): 
         output_json = {}
         
         output_json["Name"] = response.xpath(".//div[@class = 'sales-info']/h1/text()").get()
@@ -35,13 +36,15 @@ class Crawl(scrapy.Spider):
         insurance = response.xpath(".//article[@id = 'accepted-insurance']/div[@class = 'lists']/ul[*]/li[*]/text()").getall()
         """        for i in response.xpath(".//article[@id = 'accepted-insurance']/div[@class = 'lists']"):
             print(i.xpath("./ul/li[*]/text()").getall())"""
-        data = {}
-        # for i in response.xpath(".//dl"):
-        #     for j, k in zip(i.xpath(".//dt/text()"), i.xpath(".//dd/text()")):
-        #         print(j, "\n\n", k)
+        print(output_json)
+        print("/////////////////////////////////")
+        business = {}
         for i in response.xpath(".//dl"):
-            for j, k in zip(i.xpath(".//dt/text()"), i.xpath(".//dd")):
-                print(j.get(), k.xpath(".//*"))
+            for j,k in zip(i.xpath("//dt").getall(),i.xpath("//dd").getall()):
+                business[j] = k
+        json_obj = json.dumps(business)
+        print(json_obj)
+
                 # if k.xpath(".//ul").get():
                 #     data[j.get()] = k.xpath(".//ul/li").getall()
                 #     print(j.get(), k.xpath(".//ul/li/text()").getall(), "*"*10)
@@ -55,11 +58,11 @@ class Crawl(scrapy.Spider):
             # # print(i, "\n\n")
             # print(i.xpath(".//dd"))            
             # data[x] =  i.xpath(".//dd/text()").get()
-        print(data)
-        # info.append(count)
-        # output_json["Span"] = " ".join(info)
-        #pdb.set_trace()
-        print(output_json)
+        # print(data)
+        # # info.append(count)
+        # # output_json["Span"] = " ".join(info)
+        # #pdb.set_trace()
+        # print(output_json)
 
 """for list_data in response.xpath(".//div[@class='result']"):
 ids = list_data.xpath(".//@id").get()

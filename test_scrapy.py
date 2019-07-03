@@ -2,6 +2,7 @@ import scrapy
 from scrapy.selector import Selector
 
 import time 
+import json
 
 class Crawl(scrapy.Spider):
     """ scrapper yellow pages list"""
@@ -20,9 +21,7 @@ class Crawl(scrapy.Spider):
 
     def parse(self, response):
         output_json = {}
-        #pdb.set_trace()
-        count = 1
-        # data = response.xpath(".//script[@type = 'application/ld+json'][2]").get()
+       
         for sub_list in response.xpath(".//div[contains(@class,'search-result')]/div[@class='result']/div/div[@class= 'v-card']"):
             # time.sleep(0.5)
             output_json["Name"] = sub_list.xpath(".//h2/a/span/text()").get()
@@ -34,10 +33,12 @@ class Crawl(scrapy.Spider):
             output_json["Address"] = sub_list.xpath(".//p[@class= 'adr']/span[@class= 'street-address']/text()").get()
             output_json["Locality"] = sub_list.xpath(".//p[@class='adr']/span[@class= 'locality']/text()").get()
             for links in sub_list.xpath(".//div[contains(@class, 'links')]/a"):
-                output_json[links.xpath(".//text()").get()] = links.xpath(".//@href").get()              
+                output_json[links.xpath(".//text()").get()] = links.xpath(".//@href").get() 
+            print(json.dumps(output_json)) 
+            print("///////////////////////////")            
             # print(output_json)
             #count += 1
             #print("count", count)
-            print(output_json)
-        print("///////////////////////////")
+        
+        
             #output_json = {}
