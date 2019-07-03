@@ -26,27 +26,28 @@ class Crawl(scrapy.Spider):
         #         business[j] = k
         #         json_obj = json.dumps(business)
         #         print(json_obj)
-        # output_json = {}
+        output_json = {}
         
-        # output_json["Name"] = response.xpath(".//div[@class = 'sales-info']/h1/text()").get()
-        # output_json["Address"] = response.xpath(".//div[@class = 'contact']/h2/text()").get()
-        # output_json["Phone"] = response.xpath(".//div[@class = 'contact']/p/text()").get()
-        # output_json["Current_status"] = response.xpath(".//div[@class = 'time-info']/div[1]/text()").get()
-        # output_json["Working_hours"] = response.xpath(".//div[@class = 'time-info']/div[2]/text()").get()
-        # # years-in-business
-        # count = response.xpath(".//div[@class = 'years-in-business']/div[@class= 'count']/div[@class= 'number']/text()").get()
-        # info = response.xpath(".//div[@class = 'years-in-business']/span/text()").getall()
-        # output_json["Working_years"] = count
-        # output_json["Total_Working_days"] = info
+        output_json["Name"] = response.xpath(".//div[@class = 'sales-info']/h1/text()").get()
+        output_json["Address"] = response.xpath(".//div[@class = 'contact']/h2/text()").get()
+        output_json["Phone"] = response.xpath(".//div[@class = 'contact']/p/text()").get()
+        output_json["Current_status"] = response.xpath(".//div[@class = 'time-info']/div[1]/text()").get()
+        output_json["Working_hours"] = response.xpath(".//div[@class = 'time-info']/div[2]/text()").get()
+        # years-in-business
+        count = response.xpath(".//div[@class = 'years-in-business']/div[@class= 'count']/div[@class= 'number']/text()").get()
+        info = response.xpath(".//div[@class = 'years-in-business']/span/text()").getall()
+        output_json["Working_years"] = count
+        output_json["Total_Working_days"] = info
         # insurance = response.xpath(".//article[@id = 'accepted-insurance']/div[@class = 'lists']/ul[*]/li[*]/text()").getall()
         # """        for i in response.xpath(".//article[@id = 'accepted-insurance']/div[@class = 'lists']"):
         #     print(i.xpath("./ul/li[*]/text()").getall())"""
         data = {}
         for i in response.xpath(".//section/dl"):
             for j, k in zip(i.xpath("./dt/text()"), i.xpath("./dd")):
-                data[j.get()] = k
+                output_json[j.get()] = k.get()
                 print(j.get(), "\n", k, "\n\n")
-        putDataInDb("business_data", data)
+        putDataInDb("business_data", output_json)
+
         
         # for i in response.xpath(".//dl"):
         #     for j, k in zip(i.xpath(".//dt/text()"), i.xpath(".//dd")):
