@@ -1,9 +1,7 @@
 import scrapy
 from scrapy.selector import Selector
-import pudb
-import pdb
 import time 
-
+import json 
 class Crawl(scrapy.Spider):
     """ scrapper yellow pages list"""
     name = "BuisnessCrawl"
@@ -20,28 +18,34 @@ class Crawl(scrapy.Spider):
 
 
     def parse(self, response):
-        output_json = {}
+        business = {}
+        for i in response.xpath(".//dl"):
+            for j,k in zip(i.xpath("//dt").getall(),i.xpath("//dd").getall()):
+                business[j] = k
+                json_obj = json.dumps(business)
+                print(json_obj)
+        # output_json = {}
         
-        output_json["Name"] = response.xpath(".//div[@class = 'sales-info']/h1/text()").get()
-        output_json["Address"] = response.xpath(".//div[@class = 'contact']/h2/text()").get()
-        output_json["Phone"] = response.xpath(".//div[@class = 'contact']/p/text()").get()
-        output_json["Current_status"] = response.xpath(".//div[@class = 'time-info']/div[1]/text()").get()
-        output_json["Working_hours"] = response.xpath(".//div[@class = 'time-info']/div[2]/text()").get()
-        # years-in-business
-        count = response.xpath(".//div[@class = 'years-in-business']/div[@class= 'count']/div[@class= 'number']/text()").get()
-        info = response.xpath(".//div[@class = 'years-in-business']/span/text()").getall()
-        output_json["Working_years"] = count
-        output_json["Total_Working_days"] = info
-        insurance = response.xpath(".//article[@id = 'accepted-insurance']/div[@class = 'lists']/ul[*]/li[*]/text()").getall()
-        """        for i in response.xpath(".//article[@id = 'accepted-insurance']/div[@class = 'lists']"):
-            print(i.xpath("./ul/li[*]/text()").getall())"""
-        data = {}
+        # output_json["Name"] = response.xpath(".//div[@class = 'sales-info']/h1/text()").get()
+        # output_json["Address"] = response.xpath(".//div[@class = 'contact']/h2/text()").get()
+        # output_json["Phone"] = response.xpath(".//div[@class = 'contact']/p/text()").get()
+        # output_json["Current_status"] = response.xpath(".//div[@class = 'time-info']/div[1]/text()").get()
+        # output_json["Working_hours"] = response.xpath(".//div[@class = 'time-info']/div[2]/text()").get()
+        # # years-in-business
+        # count = response.xpath(".//div[@class = 'years-in-business']/div[@class= 'count']/div[@class= 'number']/text()").get()
+        # info = response.xpath(".//div[@class = 'years-in-business']/span/text()").getall()
+        # output_json["Working_years"] = count
+        # output_json["Total_Working_days"] = info
+        # insurance = response.xpath(".//article[@id = 'accepted-insurance']/div[@class = 'lists']/ul[*]/li[*]/text()").getall()
+        # """        for i in response.xpath(".//article[@id = 'accepted-insurance']/div[@class = 'lists']"):
+        #     print(i.xpath("./ul/li[*]/text()").getall())"""
+        # data = {}
         # for i in response.xpath(".//dl"):
         #     for j, k in zip(i.xpath(".//dt/text()"), i.xpath(".//dd/text()")):
         #         print(j, "\n\n", k)
-        for i in response.xpath(".//dl"):
-            for j, k in zip(i.xpath(".//dt/text()"), i.xpath(".//dd")):
-                print(j.get(), k.xpath(".//*"))
+        # for i in response.xpath(".//dl"):
+        #     for j, k in zip(i.xpath(".//dt/text()"), i.xpath(".//dd")):
+        #         print(j.get(), k.xpath(".//*"))
                 # if k.xpath(".//ul").get():
                 #     data[j.get()] = k.xpath(".//ul/li").getall()
                 #     print(j.get(), k.xpath(".//ul/li/text()").getall(), "*"*10)
@@ -55,11 +59,11 @@ class Crawl(scrapy.Spider):
             # # print(i, "\n\n")
             # print(i.xpath(".//dd"))            
             # data[x] =  i.xpath(".//dd/text()").get()
-        print(data)
+        # print(data)
         # info.append(count)
         # output_json["Span"] = " ".join(info)
         #pdb.set_trace()
-        print(output_json)
+        # print(output_json)
 
 """for list_data in response.xpath(".//div[@class='result']"):
 ids = list_data.xpath(".//@id").get()
@@ -73,7 +77,8 @@ yp_url = sub_list.xpath('.//h2/a/@href').get()
 output_json["Url"] = yp_url
 time.sleep(0.5)            
 #print(sub_list.xpath(".//div[contains(@class, 'info-secondary')]/div[contains(@class, 'phone')]/text()").get())            
-output_json["Phone"] = sub_list.xpath(".//div[contains(@class, 'info-secondary')]/div[contains(@class, 'phone')]/text()").get()
+output_json["Phone"] = sub_list.xpath(".//div[contails
+ns(@class, 'info-secondary')]/div[contains(@class, 'phone')]/text()").get()
 output_json["Address"] = sub_list.xpath(".//div[contains(@class, 'info-secondary')]/div[contains(@class, 'street-address')]/text()").get()
 output_json["Locality"] = sub_list.xpath(".//div[contains(@class, 'info-secondary')]/div[contains(@class,'locality')]/text()").get()
 for links in sub_list.xpath(".//div[contains(@class, 'links')]/a"):
