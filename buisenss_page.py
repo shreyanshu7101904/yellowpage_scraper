@@ -2,6 +2,8 @@ import scrapy
 from scrapy.selector import Selector
 import time 
 import json 
+from mongodbfunc import putDataInDb
+import string
 class Crawl(scrapy.Spider):
     """ scrapper yellow pages list"""
     name = "BuisnessCrawl"
@@ -18,12 +20,12 @@ class Crawl(scrapy.Spider):
 
 
     def parse(self, response):
-        business = {}
-        for i in response.xpath(".//dl"):
-            for j,k in zip(i.xpath("//dt").getall(),i.xpath("//dd").getall()):
-                business[j] = k
-                json_obj = json.dumps(business)
-                print(json_obj)
+        # business = {}
+        # for i in response.xpath(".//dl"):
+        #     for j,k in zip(i.xpath("//dt").getall(),i.xpath("//dd").getall()):
+        #         business[j] = k
+        #         json_obj = json.dumps(business)
+        #         print(json_obj)
         # output_json = {}
         
         # output_json["Name"] = response.xpath(".//div[@class = 'sales-info']/h1/text()").get()
@@ -39,10 +41,13 @@ class Crawl(scrapy.Spider):
         # insurance = response.xpath(".//article[@id = 'accepted-insurance']/div[@class = 'lists']/ul[*]/li[*]/text()").getall()
         # """        for i in response.xpath(".//article[@id = 'accepted-insurance']/div[@class = 'lists']"):
         #     print(i.xpath("./ul/li[*]/text()").getall())"""
-        # data = {}
-        # for i in response.xpath(".//dl"):
-        #     for j, k in zip(i.xpath(".//dt/text()"), i.xpath(".//dd/text()")):
-        #         print(j, "\n\n", k)
+        data = {}
+        for i in response.xpath(".//section/dl"):
+            for j, k in zip(i.xpath("./dt/text()"), i.xpath("./dd")):
+                data[j.get()] = k
+                print(j.get(), "\n", k, "\n\n")
+        putDataInDb("business_data", data)
+        
         # for i in response.xpath(".//dl"):
         #     for j, k in zip(i.xpath(".//dt/text()"), i.xpath(".//dd")):
         #         print(j.get(), k.xpath(".//*"))

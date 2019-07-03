@@ -2,13 +2,12 @@ from pymongo import MongoClient
 
 
 
-def putDataInDb(value):
+def putDataInDb(doc, value):
     ob = MongoClient()
-    db = ob.yellowpages_info.yellowpages_data
+    db = ob.yellowpages_info[doc]
     ids = db.insert_one(value).inserted_id
     # 
     # print(ids)
-
 
 value = {
     "name": "abc",

@@ -45,5 +45,5 @@ class Crawl(scrapy.Spider):
             output_json["Locality"] = sub_list.xpath(".//p[@class='adr']/span[@class= 'locality']/text()").get()
             for links in sub_list.xpath(".//div[contains(@class, 'links')]/a"):
                 output_json[links.xpath(".//text()").get()] = links.xpath(".//@href").get()              
-            putDataInDb(output_json)
+            putDataInDb("yellowpages_data", output_json)
 
