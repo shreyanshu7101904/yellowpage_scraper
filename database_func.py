@@ -8,18 +8,26 @@ def cursorObject():
     ref_coll = client.yellowpages_info
     return ref_coll
 
-def documentObject(name, ref):
-    ob = ref["yellowpages_data"]
+def documentObject(name):
+    client = MongoClient()
+    ref_coll = client.yellowpages_info
+    ob = ref_coll["yellowpages_data"]
     result = ob.find(name, {"Url":1, "Name":1,"_id":1})
+    for i in result:
+        print(i["_id"])
+
+def findById(ids):
+    client = MongoClient()
+    ref_coll = client.yellowpages_info
+    ob = ref_coll["yellowpages_data"]
+    result = ob.findOne({}, {"Url":1, "Name":1,"_id":1})
     for i in result:
         print(i["_id"])
 
 
 if __name__ == '__main__':
-    db = cursorObject()
-    
-    print(str(date.today()))
+
     query = {
-        "Date" : "2019-07-02"
+        "_id" : "5d1dd74a1ca65d9980a50389"
     }
-    documentObject(query, db)
+    findById(query)

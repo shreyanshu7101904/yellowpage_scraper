@@ -26,12 +26,14 @@ class Crawl(scrapy.Spider):
         for link in links:
             for number in range(1,10):
                 url = link + "?page=" + str(number)             
-                yield scrapy.Request(url = url, callback = self.parse,meta= {"request_url":url} )
+        yield scrapy.Request(url = "https://www.yellowpages.com/los-angeles-ca/plumbers?page=2", callback = self.parse,meta= {"request_url":url} )
 
 
     def parse(self, response):
-        # print(response.text)
-        for cards in response.xpath(".//div[@class = 'scrollable-pane']/div[contains(@class,'organic')]/div[@class='result']"):
+        count = 0
+        print(response.text)
+        for cards in response.xpath(".//div[contains(@class,'organic')]/div[@class='result']"):
+            count += 1
             output_json = {}
             output_json["request_url"] = response.meta["request_url"]
             output_json["response_url"] = str(response.url)
@@ -52,13 +54,12 @@ class Crawl(scrapy.Spider):
             output_json["Locality"] = sub_list.xpath(".//div[contains(@class, 'info-primary')]/p[@class='adr']/span[@class= 'locality']/text()").get()
             output_json["Region"] = sub_list.xpath(".//div[contains(@class, 'info-primary')]/p[@class= 'adr']/span[3]/text()").get()
             output_json["ZipCode"] = sub_list.xpath(".//div[contains(@class, 'info-primary')]/p[@class= 'adr']/span[4]/text()").get()
-            print(output_json["Name"],sub_list.xpath(".//div[contains(@class, 'info-primary')]/p[@class= 'adr']/span[@class= 'street-address']").get())
             # output_json["Zipcode"] = sub_list.xpath(".//p[@class='adr']/span[last()]/text()").get()
             for links in sub_list.xpath(".//div[contains(@class, 'links')]/a"):
                 output_json[links.xpath(".//text()").get()] = links.xpath(".//@href").get()              
-            putDataInDb("yellowpages_data", output_json)
+            #putDataInDb("yellowpages_data", output_json)
             #print(output_json)
             # print(count)
             # print(output_json["Name"])
             # print(output_json["Address"])
-            # print("******", output_json)
+        print("******", response.url)

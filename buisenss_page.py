@@ -41,6 +41,7 @@ class Crawl(scrapy.Spider):
             for j, k in zip(i.xpath("./dt/text()"), i.xpath("./dd")):
                 output_json[j.get()] = k.get()
                 # print(j.get(), "\n", k.get(), "\n\n", dir(k))
+        
         putDataInDb("business_data", output_json)
         
 
