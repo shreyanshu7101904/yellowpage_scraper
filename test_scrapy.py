@@ -24,26 +24,34 @@ class Crawl(scrapy.Spider):
         links = self.generateLinks()
         for link in links:
             for number in range(1,10):
-                url = link + "?page =" + str(number)             
-                yield scrapy.Request(url = url, callback = self.parse, )
+                url = link + "?page=" + str(number)             
+                yield scrapy.Request(url = "https://www.yellowpages.com/los-angeles-ca/plumbers?page=1", callback = self.parse, )
 
 
     def parse(self, response):
-        
-        for cards in response.xpath(".//div[contains(@class,'search-result')]/div[@class='result']"):
+        count = 1
+        for cards in response.xpath(".//div[contains(@class,'organic')]/div[@class='result']"):
             output_json = {}
+        
             sub_list =cards.xpath(".//div/div[@class= 'v-card']")
-            output_json["Name"] = sub_list.xpath(".//h2/a/span/text()").get()
+            output_json["start_url"] = response.request.url
+            output_json["response_url"] = response.url
+            Name = sub_list.xpath(".//h2/a/span").getall()
             ids = cards.xpath(".//@id").get()
             output_json["Image_Url"] = sub_list.xpath(".//div[@class='media-thumbnail']/a[contains(@class, 'media-thumbnail')]/img/@src").get()
             if ids:
                 output_json["id"] = ids.split("-")[1]
             yp_url = sub_list.xpath('.//h2/a/@href').get()
             output_json["Url"] = yp_url                    
-            output_json["Phone"] = sub_list.xpath(".//div[contains(@class, 'phone')]/text()").get()
-            output_json["Address"] = sub_list.xpath(".//p[@class= 'adr']/span[@class= 'street-address']/text()").get()
-            output_json["Locality"] = sub_list.xpath(".//p[@class='adr']/span[@class= 'locality']/text()").get()
+            ph = sub_list.xpath(".//div[contains(@class, 'phone')]/text()").get()
+            Address = sub_list.xpath(".//p[@class='adr']/text()").get()
+            # output_json["Locality"] = sub_list.xpath(".//p[@class='adr']/text()").get()
             for links in sub_list.xpath(".//div[contains(@class, 'links')]/a"):
-                output_json[links.xpath(".//text()").get()] = links.xpath(".//@href").get()              
-            putDataInDb("yellowpages_data", output_json)
-
+                output_json[links.xpath(".//text()").get()] = links.xpath(".//@href").get()  
+                        
+            # putDataInDb("yellowpages_data", output_json)
+            print(count,Name)
+            # print(ph)
+            # print(Address)
+            count+=1
+            print("////////////////////")
