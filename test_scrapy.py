@@ -44,10 +44,13 @@ class Crawl(scrapy.Spider):
             yp_url = sub_list.xpath('.//h2/a/@href').get()
             output_json["Url"] = yp_url                    
             output_json["Phone"] = sub_list.xpath(".//div[contains(@class, 'phone')]/text()").get()
-            output_json["Address"] = sub_list.xpath(".//p[@class= 'adr']/span[@class= 'street-address']/text()").get()
-            output_json["Locality"] = sub_list.xpath(".//p[@class='adr']/span[@class= 'locality']/text()").get()
+            output_json["Address"] = sub_list.xpath(".//div[contains(@class, 'info-primary')]/p[@class= 'adr']/span[@class= 'street-address']/text()").get()
+            output_json["Locality"] = sub_list.xpath(".//div[contains(@class, 'info-primary')]/p[@class='adr']/span[@class= 'locality']/text()").get()
+            output_json["Region"] = sub_list.xpath(".//div[contains(@class, 'info-primary')]/p[@class= 'adr']/span[3]/text()").get()
+            output_json["ZipCode"] = sub_list.xpath(".//div[contains(@class, 'info-primary')]/p[@class= 'adr']/span[4]/text()").get()
             # output_json["Zipcode"] = sub_list.xpath(".//p[@class='adr']/span[last()]/text()").get()
             for links in sub_list.xpath(".//div[contains(@class, 'links')]/a"):
                 output_json[links.xpath(".//text()").get()] = links.xpath(".//@href").get()              
-            putDataInDb("yellowpages_data", output_json)
+            # putDataInDb("yellowpages_data", output_json)
+            print(output_json)
 
