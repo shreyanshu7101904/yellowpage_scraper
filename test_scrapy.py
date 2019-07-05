@@ -14,7 +14,7 @@ class Crawl(scrapy.Spider):
 
     def putDataInDb(self, doc, value):
         ob = MongoClient()
-        value["Date"] = str(datetime.date.today())
+        value["date"] = str(datetime.date.today())
         db = ob.yellowpages_info[doc]
         ids = db.insert_one(value).inserted_id
         print(ids)
@@ -27,9 +27,9 @@ class Crawl(scrapy.Spider):
             links.append("https://www.yellowpages.com"+"/"+l + "/" + b)
         return links
 
-        def key_filter(self, key):
-            s1 = re.sub('[^A-Za-z0-9]+', '_',key.lower().strip())
-            return s1
+    def key_filter(self, key):
+        s1 = re.sub('[^A-Za-z0-9]+', '_',key.lower().strip())
+        return s1
 
     def start_requests(self):
         user_agent = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
@@ -47,9 +47,9 @@ class Crawl(scrapy.Spider):
             output_json["request_url"] = response.meta["request_url"]
             output_json["response_url"] = str(response.url)
             sub_list =cards.xpath(".//div/div[@class= 'v-card']")
-            output_json["Name"] = sub_list.xpath(".//h2/a/span/text()").get()         
+            output_json["name"] = sub_list.xpath(".//h2/a/span/text()").get()         
             ids = cards.xpath(".//@id").get()
-            output_json["Image_Url"] = sub_list.xpath(".//div[@class='media-thumbnail']/a[contains(@class, 'media-thumbnail')]/img/@src").get()
+            output_json["image_url"] = sub_list.xpath(".//div[@class='media-thumbnail']/a[contains(@class, 'media-thumbnail')]/img/@src").get()
             if ids:
                 output_json["id"] = ids.split("-")[1]
             yp_url = sub_list.xpath('.//h2/a/@href').get()
@@ -61,6 +61,6 @@ class Crawl(scrapy.Spider):
             output_json["region"] = sub_list.xpath(".//div[contains(@class, 'info-primary')]/p[@class= 'adr']/span[3]/text()").get()
             output_json["zipcode"] = sub_list.xpath(".//div[contains(@class, 'info-primary')]/p[@class= 'adr']/span[4]/text()").get()
             for links in sub_list.xpath(".//div[contains(@class, 'links')]/a"):
-
-                output_json[links.xpath(".//text()").get()] = links.xpath(".//@href").get()   
+                key = self.key_filter(links.xpath(".//text()").get())
+                output_json[key] = links.xpath(".//@href").get()   
             self.putDataInDb("yellowpages_data", output_json)

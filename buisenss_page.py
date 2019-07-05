@@ -15,7 +15,7 @@ class Crawl(scrapy.Spider):
 
     def putDataInDb(self, doc, value):
         ob = MongoClient()
-        value["Date"] = str(datetime.date.today())
+        value["date"] = str(datetime.date.today())
         db = ob.yellowpages_info[doc]
         ids = db.insert_one(value).inserted_id
         print(ids)
@@ -26,7 +26,7 @@ class Crawl(scrapy.Spider):
 
     def getUrlDataFromDb(self):
         query = {
-            "Date": str(datetime.date.today())
+            "date": str(datetime.date.today())
         }
 
         client = MongoClient()
@@ -53,7 +53,7 @@ class Crawl(scrapy.Spider):
         output_json["address"] = response.xpath(".//div[@class = 'contact']/h2/text()").get()
         output_json["phone"] = response.xpath(".//div[@class = 'contact']/p/text()").get()
         output_json["current_status"] = response.xpath(".//div[@class = 'time-info']/div[1]/text()").get()
-        output_json["Working_hours"] = response.xpath(".//div[@class = 'time-info']/div[2]/text()").get()
+        output_json["working_hours"] = response.xpath(".//div[@class = 'time-info']/div[2]/text()").get()
         count = response.xpath(".//div[@class = 'years-in-business']/div[@class= 'count']/div[@class= 'number']/text()").get()
         info = response.xpath(".//div[@class = 'years-in-business']/span/text()").getall()
         if info:
