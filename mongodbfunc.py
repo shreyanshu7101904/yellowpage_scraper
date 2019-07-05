@@ -20,6 +20,17 @@ def getUrlDataFromDb():
     ob = ref_coll["yellowpages_data"]
     result = ob.find(query, {"Url":1})
     return result
+    # db.getCollection('college_data').aggregate([
+    # { $match: {
+    #      programs: { $elemMatch: {streams: "Arts"} }
+    # }},
+    # { $redact : {
+    #      $cond: {
+    #          if: { $or : [{ $eq: ["$streams","Arts"] }, { $not : "$streams" }]},
+    #          then: "$$DESCEND",
+    #          else: "$$PRUNE"
+    #      }
+    # }}]);
         
 
 
