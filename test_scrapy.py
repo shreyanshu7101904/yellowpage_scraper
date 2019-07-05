@@ -38,7 +38,7 @@ class Crawl(scrapy.Spider):
         for link in links:
             for number in range(1,10):
                 url = link + "?page=" + str(number)             
-        yield scrapy.Request(url = url, callback = self.parse,meta= {"request_url":url} )
+                yield scrapy.Request(url = url, callback = self.parse,meta= {"request_url":url} )
 
 
     def parse(self, response):
