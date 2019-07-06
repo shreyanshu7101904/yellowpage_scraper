@@ -13,7 +13,7 @@ class Crawl(scrapy.Spider):
 	}
 
     def putDataInDb(self, doc, value):
-        ob = MongoClient()
+        ob = MongoClient("mongodb://admin:new_password_here@localhost:27017/")
         value["date"] = str(datetime.date.today())
         db = ob.yellowpages_info[doc]
         ids = db.insert_one(value).inserted_id
@@ -43,15 +43,13 @@ class Crawl(scrapy.Spider):
 
     def parse(self, response):
         for cards in response.xpath(".//div[@class = 'scrollable-pane']/div[contains(@class,'organic')]/div[@class='result']"):
-            output_json = {}
-            output_json["request_url"] = response.meta["request_url"]
-            output_json["response_url"] = str(response.url)
+            output_json = {}          
             sub_list =cards.xpath(".//div/div[@class= 'v-card']")
             output_json["name"] = sub_list.xpath(".//h2/a/span/text()").get()         
             ids = cards.xpath(".//@id").get()
-            output_json["image_url"] = sub_list.xpath(".//div[@class='media-thumbnail']/a[contains(@class, 'media-thumbnail')]/img/@src").get()
             if ids:
                 output_json["id"] = ids.split("-")[1]
+            output_json["image_url"] = sub_list.xpath(".//div[@class='media-thumbnail']/a[contains(@class, 'media-thumbnail')]/img/@src").get()
             yp_url = sub_list.xpath('.//h2/a/@href').get()
             output_json["url_yellowpage"] = yp_url                    
             output_json["phone"] = sub_list.xpath(".//div[contains(@class, 'phone')]/text()").get()
@@ -62,5 +60,10 @@ class Crawl(scrapy.Spider):
             output_json["zipcode"] = sub_list.xpath(".//div[contains(@class, 'info-primary')]/p[@class= 'adr']/span[4]/text()").get()
             for links in sub_list.xpath(".//div[contains(@class, 'links')]/a"):
                 key = self.key_filter(links.xpath(".//text()").get())
-                output_json[key] = links.xpath(".//@href").get()   
+                output_json[key] = links.xpath(".//@href").get()
+            
+            output_json["request_url"] = response.meta["request_url"]
+            output_json["response_url"] = str(response.url)
+            url_arr = str(response.url).split("?")[0].split("/")
+            output_json["request_location"], output_json["request_category"] = url_arr[-2], url_arr[-1] 
             self.putDataInDb("yellowpages_data", output_json)

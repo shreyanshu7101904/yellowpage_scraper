@@ -14,7 +14,7 @@ class Crawl(scrapy.Spider):
 	}
 
     def putDataInDb(self, doc, value):
-        ob = MongoClient()
+        ob = MongoClient("mongodb://admin:new_password_here@localhost:27017/")
         value["date"] = str(datetime.date.today())
         db = ob.yellowpages_info[doc]
         ids = db.insert_one(value).inserted_id
@@ -29,7 +29,7 @@ class Crawl(scrapy.Spider):
             "date": str(datetime.date.today())
         }
 
-        client = MongoClient()
+        client = MongoClient("mongodb://admin:new_password_here@localhost:27017/")
         ref_coll = client.yellowpages_info
         ob = ref_coll["yellowpages_data"]
         result = ob.find(query, {"url_yellowpage":1})
@@ -49,6 +49,8 @@ class Crawl(scrapy.Spider):
 
     def parse(self, response):
         output_json = {}
+        bookmark_id = response.xpath('.//a[@class="add-to-mybook"]/@data-ypid').extract()
+        output_json['business_id'] = bookmark_id[0]
         output_json["name"] = response.xpath(".//div[@class = 'sales-info']/h1/text()").get()
         output_json["address"] = response.xpath(".//div[@class = 'contact']/h2/text()").get()
         output_json["phone"] = response.xpath(".//div[@class = 'contact']/p/text()").get()
