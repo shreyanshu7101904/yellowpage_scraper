@@ -31,7 +31,7 @@ class Crawl(scrapy.Spider):
 
         client = MongoClient()
         ref_coll = client.yellowpages_info
-        ob = ref_coll["yellowpages_data"]
+        ob = ref_coll["Final_Data"]
         result = ob.find(query, {"url_yellowpage":1})
         return result
 
@@ -39,7 +39,6 @@ class Crawl(scrapy.Spider):
     def start_requests(self):
         urls = self.getUrlDataFromDb()
         USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.93 Safari/537.36"
-        # Url = 'https://www.yellowpages.com/los-angeles-ca/mip/philline-parreno-banaag-d-d-s-514023798?lid=514023798'
         for link in urls:
             url = "https://www.yellowpages.com"+ link["url_yellowpage"] 
             print(url)
@@ -49,6 +48,8 @@ class Crawl(scrapy.Spider):
 
     def parse(self, response):
         output_json = {}
+        bookmark_id = response.xpath('.//a[@class="add-to-mybook"]/@data-ypid').extract()
+        output_json['business_id'] = bookmark_id[0]
         output_json["name"] = response.xpath(".//div[@class = 'sales-info']/h1/text()").get()
         output_json["address"] = response.xpath(".//div[@class = 'contact']/h2/text()").get()
         output_json["phone"] = response.xpath(".//div[@class = 'contact']/p/text()").get()
